@@ -1,0 +1,146 @@
+
+| Index | PR001 |  |  |
+| :---- | :---- | :---- | :---- |
+| Title | Specifications \- Purpose and Guidance |  |  |
+| **[Type](https://docs.google.com/document/d/1lStJjBGW7lyojgBhxGLUNnliUocYWjAZ1VEbbVduX54/edit?usp=sharing)** | **Author(s)** | **[Status](https://docs.google.com/document/d/1lStJjBGW7lyojgBhxGLUNnliUocYWjAZ1VEbbVduX54/edit?usp=sharing)** | **Created** |
+| Process | [Maksim Beliaev](mailto:maksim.beliaev@canonical.com) [Jon Seager](mailto:jon.seager@canonical.com) [Gustavo Niemeyer at Canonical](mailto:gustavo.niemeyer@canonical.com) | Approved | Apr 22, 2021 |
+|  | **Reviewer(s)** | **Status** | **Date** |
+|  | [Éric St-Jean](mailto:eric.st-jean@canonical.com) | Approved | Aug 11, 2023 |
+|  | [Eric Gelinas](mailto:eric.gelinas@canonical.com) | Approved | Aug 11, 2023 |
+|  | [Olivier Philippe](mailto:olivier.philippe@canonical.com) | Approved | Aug 11, 2023 |
+|  | [Anthony Dillon](mailto:anthony.dillon@canonical.com) | Approved | Jul 11, 2023 |
+
+# Abstract
+
+As an engineering organisation, we should write specifications for the work we do, and we should do it in a consistent and orderly manner. Specifications are used to organise and document the process of software development. This meta-specification describes the usage of specifications within the Engineering organisation.
+
+# Rationale
+
+The purpose of creating engineering specifications is to ensure careful consideration of the problem and proposed solution before moving forward with implementation. By writing a spec, the team is encouraged to think thoroughly about the problem at hand and develop a well-thought-out solution. This process also promotes a shared understanding of the problem and the proposed solution among team members. The written spec facilitates peer review, iteration, and ultimately leads to an agreed-upon approach. Additionally, having specs provides cross-team visibility, as the work of one team may impact or interest other teams. It is crucial for other teams to be aware of and able to provide feedback on the design of work conducted by another team. Lastly, specs serve as a record of the work that has been done.
+
+It is important to note that specs do not need to be excessively detailed. Even concise specs can provide the aforementioned benefits.
+
+## Goals
+
+Our approach to engineering specifications aims to achieve the following goals:
+
+1. **Active Discoverability**: Interested parties and stakeholders should be able to easily locate the spec documents for the features or topics they are interested in. Spec documents should be readily accessible without the need for direct communication. To accomplish this, we need to establish a [centralised repository or index of specs](https://specs.canonical.com/) that encompasses the entire engineering organisation.  
+2. **Consensus**: One of the main advantages of having specs is to foster a shared understanding and agreement on proposals. Peers should have the opportunity to thoroughly comprehend the proposal, ask questions, provide comments for clarification, and suggest improvements. Iteration should take place until a common consensus is reached. To facilitate this collaborative process, we will use Google Docs, which provides helpful tools for commenting, suggesting changes, and group editing.  
+3. **Consistency**: All teams are expected to create specs for their projects. If a feature is included in the roadmap, it must have a corresponding spec. Even if a feature is not on the roadmap, it may still require a spec. Specs should be developed prior to implementation, although prototyping and experimentation are not excluded during the design and spec-writing phase. Before approval, the author's manager and peers should review the spec. Specs should follow a consistent naming convention and be stored in a centralised location or index.
+
+# Specification
+
+This document is strongly based on practices and material used in other projects: Launchpad, Landscape, and Python.
+
+## Specification Creation Process
+
+To create new doc please follow the steps:
+
+1. Open your team folder In Google Drive Engineering \> [Specifications](https://drive.google.com/drive/folders/1c7NUu8UxZWc8Uc8fX3qY6-pqqc_w5-t3?usp=sharing) \> [Teams](https://drive.google.com/drive/folders/19jxxVn_3n6ZAmFl3DReEVgZjxZnlky4X?usp=sharing)   
+2. Click "+ New" button at top left.  
+3. Hover mouse cursor over the arrow at the end of the "Google Docs" row:  
+   ![][image1]  
+4. Select *From a template*  
+5. Select AA001 \- Specification template  
+   ![][image2]  
+6. New file will be created  
+7. Update the title to match “*XXYYY \- file name*”, where   
+   1. XX is the code of your team, eg JU for Juju, US for Ubuntu Server, etc (Each team starts at XX001). If you have a new team and do not have a code yet, please get in touch with [Maksim Beliaev](mailto:maksim.beliaev@canonical.com) or [Jon Seager](mailto:jon.seager@canonical.com) or [Anthony Dillon](mailto:anthony.dillon@canonical.com)  
+   2. YYY is the incremental index of the document. Check your team folder for the next available number to use.
+
+Example: “*AN001 \- First Anbox Spec*”. 
+
+8. Update metadata table index to match index of the file name  
+9. Please keep the table of metadata at the top of the document intact and up-to-date. We intend to use this data for automated notifications and indexing; ***please do not change the structure of the table*****.**  
+10. Public specs (for e.g. lxd/snapd/snapcraft) can be created in Discourse and linked to from the Google Doc. In other words, there should still be a Google Doc that conforms to the template and naming requirements, but the content itself can live in Discourse.
+
+## Specification Types
+
+There are following distinct types of specifications:
+
+1. **Standards Specifications**: These specifications outline new features for a project which will change how users or other code interact with this software. For example, an API or ABI, or a DSL. They provide a detailed description of the proposed changes and serve as a reference for development.  
+2. **Informational Specifications**: Informational specifications address project design issues or provide general guidelines and information to the project team. Unlike standards specifications, they do not propose new features. It is important to note that informational specifications do not necessarily represent a consensus or recommendation from the team. Users and implementers have the freedom to disregard informational specifications or choose to follow the advice provided.  
+3. **Process Specifications**: Process specifications focus on the processes surrounding the project or propose changes or events within a process. They are similar to standards specifications but extend beyond the software itself. Process specifications may suggest implementations, but not specifically within the codebase. They often require team consensus and hold more weight than informational specifications. Examples of process specifications include release schedules, procedures, guidelines, changes to decision-making processes, and modifications to the development tools or environment. Process specifications can also encompass general company activities or decision-making processes.  
+   A comprehensive process specification should include the following elements:  
+* **Process Description**: A clear description of the process, ideally accompanied by a process workflow diagram.  
+* **Rules, Policies, Regulations, and Standards Compliance**: Any relevant rules, policies, regulations, or standards that the process relates to, if applicable.  
+* **RACI Matrix**: A RACI matrix (Responsible/Accountable/Consulted/Informed) should be included. The RACI matrix defines the roles and responsibilities of individuals involved in the process. It outlines who is responsible, who is accountable, who should be consulted, and who should be informed about specific aspects of the process.  
+  Example RACI Matrix:
+
+| Activity set | Team 1 | Team 2 | Team 3 |
+| ----- | :---: | :---: | :---: |
+| Activity 1 | C, I | C, I | A, R  |
+| Activity 2 | I | R | A, R |
+
+4. **Product Requirement Specification (PRS)**:  is a type of specification that does not focus on the technical implementation of a specific feature, but rather serves as a source of product requirements. The PRS is typically developed by a product manager, and optionally, with input from field/support engineers, who provide their expectations regarding the desired functionality and behaviour of the product.  
+   The purpose of the PRS is to capture and document the essential requirements and user expectations for the product. It serves as a guide for the development team to understand what needs to be accomplished and what features the product should include.  
+   By creating a PRS, the product team can ensure that the product's development aligns with the desired functionality and *addresses the needs of the target users*. It provides a clear understanding of what the product should achieve and *serves as a reference for the development process*.  
+   Once the PRS is established, it becomes the basis for creating detailed **Standard Specifications**, which outline the technical implementation and design of the product to meet the requirements identified in the PRS.  
+5. **Implementation Specification**: This is the primary type of specification for developers, where the software implementation design is described. It outlines how a given product change or a **Standards/Product Requirement** specification will be effectively implemented.
+
+## Specification Workflow
+
+The process of creating specifications begins with the emergence of a new idea for the project. It is advisable to ensure that each specification focuses on a single proposal or new concept. Specifications that are well-focused tend to yield greater success. Conversely, specifications that lack focus or are overly broad may be rejected. When in doubt, it is recommended to split a specification into multiple well-defined and focused ones.
+
+Every specification should have an author who takes on the responsibility of writing the specification using the designated format and facilitates discussions in the appropriate forums and endeavours to establish team consensus around the idea. Author should initially assess the value of the idea for a specification. This preliminary information gathering can occur through developmental mailing lists, chats, or meetings. It is worth noting that small enhancements or patches often do not require a full specification and can be integrated into the project's development workflow directly.
+
+By following this process, the project team can ensure that specifications are coherent, concise, and address specific proposals or ideas. Having a dedicated champion (author) for each specification helps guide the development and decision-making process, fostering collaboration and consensus-building within the team.
+
+Depending on the specification’s state, the author may choose to set the initial status to **Braindump**, **Drafting** or **Pending Review**.
+
+Once a specification is ready for review it must be flagged as **Pending Review** and submitted to the team development mailing list or bug tracker. Specifications should not be submitted for review if there are ongoing discussions about it, or if there are unresolved issues. In these cases, the author may invite others to read and provide their opinions, but with unresolved issues a specification can't be approved, and thus should stay as either **Drafting** or **Braindump**.
+
+After a specification becomes **Approved**, the needed actions to implement proposed ideas must be put in practice. Once the issue is handled, and the implementation is done, the specification becomes **Completed** or **Active**. The **Active** status is used for specifications that are not meant to be completed, such as process specifications.
+
+Should the first iterations of development suggest adjustments to the original specification, the spec document can be amended. This guarantees that any proposed change remains in line with the original intent and the spec remains consistent with its implementation. Like a new specification, amendments should be reviewed and approved. Amending a spec should be considered for minor changes only, any major change should be rejected and lead to the creation of a new specification.
+
+**Rejected** specifications: Some specifications may be rejected if they are deemed unsuitable or not viable. It is important to keep a record of these rejections to maintain transparency and document the decision-making process.
+
+**Withdrawn** specifications: Specifications that are withdrawn before reaching an acceptable level of refinement are removed from the registry (**Google Doc is deleted**) instead of being rejected. This ensures that only active and viable specifications are pursued.
+
+Specifications may be replaced by a different specification, rendering the original one **Obsolete**. Once a new specification is written and got approved, the previous specification should change its status to **Obsolete** and a comment with the link to the new specification should be added in the Spec History table.
+
+The *usual* specification workflow is as follows:
+
+![][image3]
+
+### Specification Changelog
+
+Please document all major changes in the **"Spec History and Changelog"** section so readers can quickly see what’s changed since they last read the spec.
+
+See example in the current specification: [Spec History and Changelog](#spec-history-and-changelog)
+
+## Specification Format
+
+The specification format is prefilled in a template. Please follow the pattern from the template.
+
+## Approval Process
+
+### List of approvers
+
+The list of approvers includes people who will benefit from implementing the specification or are involved in its development. It's the responsibility of the specification author to use their best judgement and ask for input from all relevant parties. The author or their manager or team lead may pre-fill rows in the spec history with approvers they feel should review and approve the spec.
+
+### How to approve a spec
+
+The author of the specification defines the list of reviewers and adds it to the metadata table.  
+![][image4]  
+A reviewer can approve the spec by updating the ***metadata table*** and adding a new row in the ***Spec History and Changelog*** table with the current date, “***Approved***” status, and their name. This helps track changes since the last approval.  
+Once all the main stakeholders approved the specification, the status of the specification could be also transitioned to “***Approved***” status by the specification author.
+
+Expected outcome of a specification, such as software implementation effort, must not start until the related specification has been approved.
+
+***Reviewers are responsible for providing timely review.***
+
+## Cross-team Specs
+
+In the event that multiple teams are contributing to a single spec, the spec should reside in the folder of the team that is bearing the most responsibility and ownership of the work. Second team may create a Google Drive shortcut to the specification in their team folder.
+
+## Resources
+
+* [Python PEP 0001](http://www.python.org/peps/pep-0001.html), describes the Python PEP process; some of the content in this document was derived from there.
+
+# Spec History and Changelog {#spec-history-and-changelog}
+
+*Please be thorough when recording changes and progress with the spec itself and the work resulting from it.*  
+*Record every meeting, attendees and conclusions from the meeting.*
+
