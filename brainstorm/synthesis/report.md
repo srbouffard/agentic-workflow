@@ -56,8 +56,8 @@ flowchart TD
     E --> F[Engineer: Validate]
     F --> G{Review Tier}
 
-    G -->|Tier 1 — docs · trivial| H[CI + async approval]
-    G -->|Tier 2 — features · bugs| I[Peer review]
+    G -->|Tier 1 — deps · tests · mechanical| H[CI + async sign-off]
+    G -->|Tier 2 — docs · features · bugs| I[Peer review]
     G -->|Tier 3 — lifecycle · relations| J[Deep review · 2 reviewers]
 
     H & I & J --> K([Merge])
@@ -101,13 +101,17 @@ Before opening a PR, the engineer independently verifies the agent's output agai
 
 #### Peer Review (Tiered)
 
-| Tier | Applies to | What reviewers check | Gate |
-|---|---|---|---|
-| **1** | Docs, test additions, trivial config, dependency bumps | CI pass is sufficient; async lightweight approval | Any team member, async |
-| **2** | Features, bug fixes, new config/action handlers, compliance updates | Intent alignment, WALKTHROUGH.md, code spot-check for agent-typical errors | One peer, within 1 business day |
-| **3** | New relations or interfaces, lifecycle handler changes, security-sensitive paths, changes affecting IS or community team operations | Full code review, second reviewer, integration test pass | Two reviewers; sync session recommended |
+The guiding principle: **can correctness be determined objectively, or does it require human judgment?** Tier 1 is for things where CI and an agent can verify correctness — it has a clear direction toward full automation. Tier 2 and 3 require human judgment and always will.
 
-**Tier assignment:** Self-assigned by the engineer opening the PR, based on the criteria above. Any reviewer may escalate to the next tier — escalation is not a criticism, it is a quality signal.
+| Tier | Applies to | Gate — now | Gate — eventually |
+|---|---|---|---|
+| **1** | Dependency bumps · test additions (no prod code changed) · mechanical changes (linter, formatting, metadata labels) | CI pass + `pr-reviewer` skill run → lightweight async sign-off (any team member) | CI pass + agent review → auto-approved, no human required |
+| **2** | Docs · bug fixes · new config options · action handlers · compliance upkeep with code changes · new charm features following existing patterns | One peer within 1 business day — checks WALKTHROUGH.md, intent alignment, code spot-check for agent-typical errors | One peer (same gate; docs reviewed by TA or knowledgeable engineer) |
+| **3** | New relations or interfaces · lifecycle handler changes · security-sensitive paths · changes affecting how IS or community operators interact with the charm | Two reviewers · integration test pass · sync session recommended | Same |
+
+**Docs are Tier 2**, not Tier 1 — technical accuracy requires a TA or the engineer who built the feature. Content correctness is a judgment call, not objectively verifiable by CI.
+
+**Tier assignment:** Self-assigned by the engineer opening the PR. Any reviewer may escalate to the next tier — escalation is a quality signal, not a criticism.
 
 ---
 
