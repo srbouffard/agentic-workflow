@@ -47,47 +47,31 @@ All three agreed on: PLAN.md as the central artifact, tiered review, PR stacks t
 
 ```mermaid
 flowchart TD
-    A([Jira Story / Bug / Spike]) --> B
+    A([Jira Story · Bug · Spike])
 
-    subgraph intent [" INTENT PHASE — Human-primary "]
-        B[Write PLAN.md\nIntent · Requirements · Non-requirements\nAgent instructions · Completion criteria]
-        S[Google Doc Spec\nRequired for: new charm capabilities,\narchitectural decisions, cross-team impact]
-        S --> B
-    end
+    A --> B[Write PLAN.md]
+    B -->|WIP PR| C[Peer: Review Plan]
+    C -->|approved| D[Agent: Execute]
+    D --> E[Agent: Write WALKTHROUGH.md]
+    E --> F[Engineer: Validate]
+    F --> G{Review Tier}
 
-    B --> PR[Plan Review\nPeer reviews PLAN.md\nbefore any code is written]
+    G -->|Tier 1 — docs · trivial| H[CI + async approval]
+    G -->|Tier 2 — features · bugs| I[Peer review]
+    G -->|Tier 3 — lifecycle · relations| J[Deep review · 2 reviewers]
 
-    PR --> C
-
-    subgraph exec [" EXECUTION PHASE — Agent-primary "]
-        C[Agent Execution\nGuided by PLAN.md\nSelf-organises with TASKS.md]
-        C --> W[Agent writes WALKTHROUGH.md\nDecisions made · Deviations from plan\nADR candidates · Review guidance]
-    end
-
-    W --> D[Validation & Self-Review\nEngineer checks PLAN.md\ncompletion criteria]
-
-    D --> T{Review Tier}
-
-    T -- Tier 1\ndocs · tests · trivial config --> T1[CI pass + async approval]
-    T -- Tier 2\nfeatures · bug fixes · config options --> T2[Peer review:\nintent alignment + code spot-check]
-    T -- Tier 3\nnew relations · lifecycle changes\nsecurity-sensitive paths --> T3[Deep review + second reviewer\nIntegration test gate]
-
-    T1 & T2 & T3 --> M([Merge ✓])
+    H & I & J --> K([Merge])
 ```
 
 ### Phase Descriptions
 
 #### Intent Phase
 
-The engineer owns this phase entirely. Two paths depending on the scope of work:
+The engineer owns this phase entirely. For most Stories the only artifact is the PLAN.md itself. Canonical Specs come into play at the Epic level.
 
-**When to write a Google Doc Spec first:**
-- Introducing new charm capabilities or relations that affect how IS or community teams operate a service
-- Architectural decisions affecting multiple charms or shared libraries
-- Process changes requiring cross-team input or alignment
-- Any work requiring approval before implementation starts (per PR001)
+**Specs and Epics:** When a Cycle initiative produces an Epic (a new charm capability, an architectural change, a cross-team integration), one Story within that Epic is specifically for writing and getting the Spec approved — the Spec *is* the deliverable of that Story. Subsequent implementation Stories in the same Epic reference the approved Spec and may use it as the foundation for their PLAN.md. A Story that produces a Spec still uses a PLAN.md, but it is minimal: the task is "draft Spec on topic X, route through the PR001 approval process".
 
-**When PLAN.md alone is sufficient:**
+**For the majority of Stories — PLAN.md alone is sufficient:**
 - Bug fixes with a clear reproduction case
 - Compliance upkeep and dependency bumps within existing patterns
 - New config options or action handlers following established patterns
@@ -128,6 +112,16 @@ Before opening a PR, the engineer independently verifies the agent's output agai
 ---
 
 ## Part 3: The Three Key Artifacts
+
+These are **workflow artifacts, not codebase artifacts**. None of them are merged to the main branch.
+
+| Artifact | Lives where | Merged to main? |
+|---|---|---|
+| **PLAN.md** | Feature branch, reviewed via WIP PR | No |
+| **TASKS.md** | Agent working memory only (session-local) | No — ephemeral |
+| **WALKTHROUGH.md** | Feature branch, visible in the final PR | No |
+
+PLAN.md and WALKTHROUGH.md travel with the PR and are deleted (or ignored) when the branch is cleaned up after merge. Their value is in enabling the review, not in living permanently in the repo. ADRs are a separate artifact — authored by humans based on WALKTHROUGH.md suggestions and stored in a `docs/adrs/` folder.
 
 ### PLAN.md — The Contract
 
@@ -252,27 +246,23 @@ tox -e integration -- -k test_name
 
 ### Context Infrastructure (Do in Week 1)
 
-Every active charm repo should gain these files. They are the primary mechanism by which agents understand the codebase without requiring lengthy prompts.
+Agents need project context to produce useful output without lengthy per-session prompts. This is served by a single file per repo — **`AGENTS.md`**.
 
-**`AGENTS.md`** (in each charm repo root):
-- Task routing: what kinds of tasks agents should and should not take on in this repo
-- Charm-specific coding conventions (event handler structure, logging style, test patterns)
+**Two layers of context, kept separate:**
+
+**`AGENTS.md`** (committed to each charm repo — minimal, project-specific only):
+- What this charm does and who it serves
 - Key files and their purpose
-- Known gotchas and non-obvious constraints
+- Coding conventions specific to this repo (event handler structure, logging style, test patterns)
 - Validation commands (`tox -e unit`, `tox -e lint`, `tox -e integration`)
-- Explicit: "Do not include infra-specific details in any committed file"
+- Known gotchas and non-obvious constraints
 
-**`.github/copilot-instructions.md`** (team-wide or per repo):
-- Universal coding standards that apply across all PFE charms
-- Link to team PLAN.md template
-- Review tier assignment guidance
+Keep it short. It describes the project, not the workflow. A new agent session reading this file should understand what kind of charm it is working on and what the basic rules are — nothing more.
 
-**`docs/charm-architecture.md`** (per repo, where it doesn't already exist):
-- Juju model: which relations this charm provides and requires, key events, config options
-- Key design decisions and why they were made
-- How to run a meaningful integration test locally
-
-These files should be the first PR any new engineer opens. Writing them is itself a learning exercise.
+**Team workflow instructions** (NOT in charm repos — installed on engineer workstations):
+- The agent-first workflow definition, PLAN.md template, review tier rules, and team norms belong in a team-level set of skills or a global `~/.config` instruction file installed on each engineer's workstation or Multipass instance
+- These are internal workflow details and have no place in public open-source charm repos
+- The `generate-agent-skills` skill can be used to author and version these as installable skills
 
 ### GitHub Workflow
 
