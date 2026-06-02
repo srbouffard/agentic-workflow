@@ -92,12 +92,17 @@ The engineer's role during execution is active steering: injecting additional co
 
 #### Validation & Self-Review Phase
 
-Before opening a PR, the engineer independently verifies the agent's output against the PLAN.md completion criteria. This is not a formality — it is the most important quality gate the engineer owns. Specifically for charm work:
+The agent already runs tests as part of execution — that is in its directives via the global workflow instruction and the PLAN.md completion criteria. By the time the engineer validates the output, tests pass and lint is clean.
 
-- Run unit tests and verify new behaviour is tested
-- Run integration tests locally if the change touches event handling, relations, or config
-- Check that no infra-specific detail has leaked into the public repo
-- Confirm WALKTHROUGH.md is present and complete
+The engineer's job here is different: **verify that what passed is the right thing**. Three questions to answer before opening the PR:
+
+1. **Intent alignment** — Does the implementation actually do what the PLAN.md required? Read the WALKTHROUGH.md deviations section. If the agent diverged from the plan, was that divergence acceptable, or does the plan need to be revised and re-reviewed before proceeding?
+
+2. **Coverage quality** — Do the tests exercise the scenarios that matter, or do they just pass? A test that stubs the entire Juju model and asserts a variable was set is not coverage. Spot-check that tests reflect real charm behaviour for the changed paths.
+
+3. **Completion criteria** — Go through each checkbox in the PLAN.md. Not "did CI go green" but "is each requirement genuinely met as intended?"
+
+If any of these are off, the right move is to steer the agent back into another execution pass — not to manually fix agent output and open the PR anyway.
 
 #### Peer Review (Tiered)
 
@@ -105,9 +110,9 @@ The guiding principle: **can correctness be determined objectively, or does it r
 
 | Tier | Applies to | Gate — now | Gate — eventually |
 |---|---|---|---|
-| **1** | Dependency bumps · test additions (no prod code changed) · mechanical changes (linter, formatting, metadata labels) | CI pass + `pr-reviewer` skill run → lightweight async sign-off (any team member) | CI pass + agent review → auto-approved, no human required |
-| **2** | Docs · bug fixes · new config options · action handlers · compliance upkeep with code changes · new charm features following existing patterns | One peer within 1 business day — checks WALKTHROUGH.md, intent alignment, code spot-check for agent-typical errors | One peer (same gate; docs reviewed by TA or knowledgeable engineer) |
-| **3** | New relations or interfaces · lifecycle handler changes · security-sensitive paths · changes affecting how IS or community operators interact with the charm | Two reviewers · integration test pass · sync session recommended | Same |
+| **1** | Dependency bumps<br>Test additions (no prod code changed)<br>Mechanical: linter, formatting, metadata | CI pass + `pr-reviewer` skill run<br>→ lightweight async sign-off | CI pass + agent review<br>→ auto-approved |
+| **2** | Docs<br>Bug fixes<br>New config options or action handlers<br>Compliance upkeep with code changes<br>New features following existing patterns | One peer within 1 business day<br>WALKTHROUGH.md + intent alignment<br>Code spot-check for agent-typical errors | Same |
+| **3** | New relations or interfaces<br>Lifecycle handler changes<br>Security-sensitive paths<br>Changes affecting IS or community operators | Two reviewers<br>Integration test pass<br>Sync session recommended | Same |
 
 **Docs are Tier 2**, not Tier 1 — technical accuracy requires a TA or the engineer who built the feature. Content correctness is a judgment call, not objectively verifiable by CI.
 
