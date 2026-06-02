@@ -111,8 +111,8 @@ The guiding principle: **can correctness be determined objectively, or does it r
 | Tier | Applies to | Review |
 |---|---|---|
 | **1** | Dependency bumps<br>Test additions (no prod code changed)<br>Mechanical: linter, formatting, metadata | `pr-reviewer` skill run<br>+ lightweight async sign-off from any team member |
-| **2** | Docs<br>Bug fixes<br>New config options or action handlers<br>Compliance upkeep with code changes<br>New features following existing patterns | One peer within 1 business day<br>WALKTHROUGH.md + intent alignment + code spot-check |
-| **3** | New relations or interfaces<br>Lifecycle handler changes<br>Security-sensitive paths<br>Changes affecting IS or community operators | Two reviewers<br>Deep code review + local testing of the new behaviour |
+| **2** | Docs<br>Bug fixes<br>New config options or action handlers<br>Compliance upkeep with code changes<br>New features following existing patterns | One peer within 1 business day<br>WALKTHROUGH.md + intent alignment + focused review |
+| **3** | New relations or interfaces<br>Lifecycle handler changes<br>Security-sensitive paths<br>Changes affecting IS or community operators | Two reviewers<br>Local testing of the new behaviour<br>Multi-angle review: correctness · security · codebase fit · compliance · operator impact |
 
 CI and integration tests must pass for all tiers before merge. For Tier 3, reading the code is not sufficient — at least one reviewer is expected to deploy and test the change locally. Lifecycle and relation changes behave differently in a real Juju model than they appear on paper.
 
@@ -383,6 +383,8 @@ TASKS.md creation and Spec lookup are not separate skills — they are native be
 5. `pr-reviewer` skill (Month 2 — once there are real PRs to calibrate against)
 
 Evaluate what to build next based on observed friction after Month 2 — not a pre-planned list.
+
+**Medium-term direction — Tier 3 review:** Each multi-angle review angle (correctness, security, codebase fit, compliance, operator impact) is a candidate for a dedicated skill or sub-agent. The right form depends on how context-heavy each angle turns out to be in practice — sub-agents avoid context bloat when multiple angles run in the same review session. Build these incrementally as Tier 3 reviews reveal which angles reviewers consistently struggle with.
 
 ---
 
