@@ -108,13 +108,13 @@ If any of these are off, the right move is to steer the agent back into another 
 
 The guiding principle: **can correctness be determined objectively, or does it require human judgment?** Tier 1 is for things where CI and an agent can verify correctness — it has a clear direction toward full automation. Tier 2 and 3 require human judgment and always will.
 
-| Tier | Applies to | Gate |
+| Tier | Applies to | Review |
 |---|---|---|
-| **1** | Dependency bumps<br>Test additions (no prod code changed)<br>Mechanical: linter, formatting, metadata | CI pass + `pr-reviewer` skill run<br>→ lightweight async sign-off |
-| **2** | Docs<br>Bug fixes<br>New config options or action handlers<br>Compliance upkeep with code changes<br>New features following existing patterns | One peer within 1 business day<br>WALKTHROUGH.md + intent alignment<br>Code spot-check for agent-typical errors |
-| **3** | New relations or interfaces<br>Lifecycle handler changes<br>Security-sensitive paths<br>Changes affecting IS or community operators | Two reviewers<br>Integration test pass<br>Sync session recommended |
+| **1** | Dependency bumps<br>Test additions (no prod code changed)<br>Mechanical: linter, formatting, metadata | `pr-reviewer` skill run<br>+ lightweight async sign-off from any team member |
+| **2** | Docs<br>Bug fixes<br>New config options or action handlers<br>Compliance upkeep with code changes<br>New features following existing patterns | One peer within 1 business day<br>WALKTHROUGH.md + intent alignment + code spot-check |
+| **3** | New relations or interfaces<br>Lifecycle handler changes<br>Security-sensitive paths<br>Changes affecting IS or community operators | Two reviewers<br>Deep code review + local testing of the new behaviour |
 
-**Tier 1 is designed to become fully automated** — CI pass + agent review, no human sign-off required. The `pr-reviewer` skill running on every Tier 1 PR is the first step in that direction.
+CI and integration tests must pass for all tiers before merge. For Tier 3, reading the code is not sufficient — at least one reviewer is expected to deploy and test the change locally. Lifecycle and relation changes behave differently in a real Juju model than they appear on paper.
 
 **Docs are Tier 2**, not Tier 1 — technical accuracy requires a TA or the engineer who built the feature. Content correctness is a judgment call, not objectively verifiable by CI.
 
