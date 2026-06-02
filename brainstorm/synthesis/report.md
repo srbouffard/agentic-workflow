@@ -328,17 +328,50 @@ Commands run and their outcomes:
 
 That is it for now. Add more only when a specific reporting need cannot be met by the above.
 
-### Agent Skills
+### Agent Skills and Execution Agent
 
-The goal for the first 6 months is to establish the **workflow**, not to build a comprehensive skill library. Resist the urge to build many skills upfront — they require maintenance, drift as the codebase evolves, and distract from the core adoption.
+The goal for the first 6 months is to establish the **workflow**, not to build a comprehensive skill library. But there are three handoff points where quality can silently degrade — plan writing, execution completion, and peer review — and each needs a quality mechanism from day one.
 
-**Start with the two skills that directly enable the workflow:**
+#### The Foundation: Global Workflow Instruction
 
-1. **PLAN.md Reviewer** — Given a PLAN.md, identify: missing requirements, ambiguous instructions, likely failure modes, missing context. Output a structured review the engineer can act on before handing off to the agent. This is the skill that raises the floor of plan quality across the team.
+Before any skill or agent, there is the **global workflow instruction** — installed on each engineer's workstation or Multipass instance (not in any repo). This defines: the workflow phases, all artifact formats, team norms, and the rules for when to pause and surface to the engineer. Skills and the execution agent are built on top of this shared context.
 
-2. **WALKTHROUGH.md Writer** — Given a completed implementation diff + original PLAN.md, generate a well-structured WALKTHROUGH.md. This ensures the handoff document exists even on tight timelines.
+#### 3 Critical Skills
 
-Once those are stable and in use, evaluate what to build next based on observed friction — not based on a pre-planned list.
+Skills are narrow, invokable, stateless — given defined inputs, they produce defined output.
+
+| Skill | Inputs | Output | When invoked |
+|---|---|---|---|
+| `plan-reviewer` | A PLAN.md | Structured feedback: missing requirements, ambiguous instructions, likely failure modes, missing context | By the author (self-check) and by the peer reviewer during plan review |
+| `walkthrough-writer` | PLAN.md + implementation diff | A complete WALKTHROUGH.md | End of every execution session |
+| `pr-reviewer` | PLAN.md + WALKTHROUGH.md + diff | Structured first-pass review: intent alignment, deviations from plan, charm-specific concerns, agent-typical errors | By the peer reviewer before doing their own review |
+
+**Why `pr-reviewer` matters:** As agent-first velocity increases, so does review volume. This skill lowers the cognitive cost of peer review by orienting the reviewer in under a minute — where did the agent deviate from the plan? what are the highest-risk areas? what should the reviewer actually focus on? It does not replace the reviewer; it makes them faster and more focused.
+
+#### 1 Critical Execution Agent
+
+`pfe-execution` is the agent persona an engineer invokes to start an implementation session. Unlike a skill, it runs an entire session and maintains state throughout.
+
+It knows:
+- All workflow artifact formats and their purpose
+- How to read a PLAN.md and translate it into an implementation plan
+- How to create and maintain TASKS.md as a working checklist
+- When to pause and surface ambiguity to the engineer (before: modifying relation interfaces, stepping outside the anticipated file list, hitting an ambiguous requirement)
+- How to look up a linked Spec from the PLAN.md frontmatter if one is referenced
+- Charm conventions for this repo (supplemented by the repo's `AGENTS.md`)
+- How to write a complete WALKTHROUGH.md when the session ends
+
+TASKS.md creation and Spec lookup are not separate skills — they are native behaviours of this agent, defined in its persona context.
+
+#### Build order
+
+1. Global workflow instruction (Week 1 — prerequisite for everything else)
+2. `pfe-execution` agent (Week 2 — start basic, refine with every session)
+3. `plan-reviewer` skill (Week 2 — highest upstream leverage)
+4. `walkthrough-writer` skill (Week 3 — removes the most common time-pressure shortcut)
+5. `pr-reviewer` skill (Month 2 — once there are real PRs to calibrate against)
+
+Evaluate what to build next based on observed friction after Month 2 — not a pre-planned list.
 
 ---
 
